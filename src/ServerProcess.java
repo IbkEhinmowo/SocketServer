@@ -18,8 +18,6 @@ public class ServerProcess {
             System.out.println("Server started on port: " + port);
             // Wait for a client to connect and accept the connection.
             var client = serverSocket.accept();
-            var clientIP = client.getInetAddress().getHostAddress();
-            var clientPort = client.getPort();
             // Create a BufferedReader to read text from the client's input stream.
             var clientInput = new BufferedReader(new InputStreamReader(client.getInputStream()));
             String line;
