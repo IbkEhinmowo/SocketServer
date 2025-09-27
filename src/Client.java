@@ -16,9 +16,13 @@ public class Client {
              var Message = new PrintWriter(socket.getOutputStream(), true)) {
 
             // Announce that the connection was successful.
-            System.out.println("Connected to server. Sending message...");
-            // Send a line of text to the server.
-            Message.println("Hello from the client!");
+            String message = "Hello, from the cient side!";
+            System.out.println("Connected to server. Sending message... " + message);
+
+            // Send a message to the server.
+            Message.println(message);
+
+
 
         } catch (IOException e) {
             // If an I/O error occurs (e.g., the server is not running), print the stack trace.
