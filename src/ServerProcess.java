@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 
 /**
  * A simple server class that listens on a specified port for a single client connection.
- * It reads lines of text from the client and prints them to the console.
+ * It reads linES of text from the client and prints them to the console.
  */
 public class ServerProcess {
     /**
