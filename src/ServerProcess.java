@@ -39,10 +39,10 @@ public class ServerProcess {
             String line;
             while ((line = clientInput.readLine()) != null) {
                 if ("HEARTBEAT".equals(line)) {
-                    System.out.println("Received heartbeat from client.");
                     clientOutput.println("ALIVE");
                 } else {
                     System.out.println("Client says: " + line);
+                    clientOutput.println("type shiii");
                 }
             }
         } catch (IOException e) {

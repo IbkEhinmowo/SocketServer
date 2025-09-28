@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -14,11 +16,32 @@ public class Client {
              // Create a PrintWriter to send text to the server.
              // The 'true' argument enables auto-flushing, which sends the data immediately apparently.
              var out = new PrintWriter(socket.getOutputStream(), true);
+             var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              var consoleInput = new java.util.Scanner(System.in)) {
+
+            // Start a thread to display server output
+            Thread serverOutputThread = new Thread(() -> {
+                try {
+                    String serverLine;
+                    while ((serverLine = in.readLine()) != null) {
+                        System.out.println("server said: " + serverLine);
+                    }
+                } catch (IOException e) {
+                    System.out.println("Lost connection to server.");
+                }
+            });
+            serverOutputThread.setDaemon(true);
+            serverOutputThread.start();
+
             System.out.println("Connected to server. Type messages to send. Type 'exit' to quit.");
             String message;
             while (true) {
-                System.out.print("Enter message: ");
+                try {
+                    Thread.sleep(1000); // Small delay to prevent busy waiting
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Restore interrupt status
+                }
+                System.out.print("Enter message: "); // Use print instead of println for prompt
                 message = consoleInput.nextLine();
                 if (message.equalsIgnoreCase("exit")) {
                     break;

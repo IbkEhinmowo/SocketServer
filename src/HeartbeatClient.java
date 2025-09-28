@@ -13,7 +13,7 @@ public class HeartbeatClient {
     public static void main(String[] args) {
         String host = "localhost";
         int port = 8080;
-        int intervalMillis = 1000; // 1 second between heartbeats
+        int intervalMillis = 3000; // 1 second between heartbeats
         int reconnectMillis = 2000; // 2 seconds between reconnect attempts
 
         while (true) {
