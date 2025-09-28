@@ -1,33 +1,52 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
- * A simple server class that listens on a specified port for a single client connection.
- * It reads linES of text from the client and prints them to the console.
+ * A simple server class that listens on a specified port for multiple client connections.
+ * Each client is handled in its own thread. The server responds to a special 'HEARTBEAT' message with 'ALIVE'.
  */
 public class ServerProcess {
     /**
-     * Starts the server, waits for a client to connect, and then processes its input stream.
+     * Starts the server, accepts multiple clients, and handles each in a separate thread.
      * @param port The port number for the server to listen on.
      */
     public void process(int port) {
-        // Use a try-with-resources statement to ensure the ServerSocket is closed automatically.
+        Thread serverThread = new Thread(() -> runServer(port));
+        serverThread.start();
+    }
+
+    // The main server loop: accepts clients and starts a handler thread for each
+    private void runServer(int port) {
         try (var serverSocket = new ServerSocket(port)) {
             System.out.println("Server started on port: " + port);
-            // Wait for a client to connect and accept the connection.
-            var client = serverSocket.accept();
-            // Create a BufferedReader to read text from the client's input stream.
-            var clientInput = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            String line;
-            // Loop as long as there are lines to read from the client, print it out
-            while ((line = clientInput.readLine()) != null) {
-                System.out.println(line);
+            while (true) {
+                var client = serverSocket.accept();
+                new Thread(() -> handleClient(client)).start();
             }
         } catch (IOException e) {
-            // If an I/O error occurs, print trace.
             e.printStackTrace();
+        }
+    }
+
+    // Handles communication with a single client
+    private void handleClient(Socket client) {
+        try (var clientInput = new BufferedReader(new InputStreamReader(client.getInputStream()));
+             var clientOutput = new PrintWriter(client.getOutputStream(), true)) {
+            String line;
+            while ((line = clientInput.readLine()) != null) {
+                if ("HEARTBEAT".equals(line)) {
+                    System.out.println("Received heartbeat from client.");
+                    clientOutput.println("ALIVE");
+                } else {
+                    System.out.println("Client says: " + line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Client disconnected or error occurred.");
         }
     }
 }

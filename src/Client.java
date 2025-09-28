@@ -13,15 +13,19 @@ public class Client {
         try (var socket = new Socket("localhost", 8080);
              // Create a PrintWriter to send text to the server.
              // The 'true' argument enables auto-flushing, which sends the data immediately apparently.
-             var Message = new PrintWriter(socket.getOutputStream(), true)) {
-
-            // Announce that the connection was successful.
-            String message = "Hello, from the cient side!";
-            System.out.println("Connected to server. Sending message... " + message);
-
-            // Send a message to the server.
-            Message.println(message);
-
+             var out = new PrintWriter(socket.getOutputStream(), true);
+             var consoleInput = new java.util.Scanner(System.in)) {
+            System.out.println("Connected to server. Type messages to send. Type 'exit' to quit.");
+            String message;
+            while (true) {
+                System.out.print("Enter message: ");
+                message = consoleInput.nextLine();
+                if (message.equalsIgnoreCase("exit")) {
+                    break;
+                }
+                out.println(message);
+            }
+            System.out.println("Client disconnected.");
 
 
         } catch (IOException e) {
