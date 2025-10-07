@@ -8,13 +8,15 @@ public class Main {
      */
     public static void main(String[] args) {
         // Create a new instance of the server.
-        ServerProcess server = new ServerProcess();
+        var server = new primary();
+        var backupServer = new backup();
 
         // Announce that the server is about to start.
         System.out.println("Server process starting...");
 
-        // Start the server process, listening on port 8080. This line will block
+        // Start the server process, listening on port 8090. This line will block
         // and keep the server running.
-        server.process(8080);
+        server.process(8090);
+        backupServer.process(8089);
     }
 }
