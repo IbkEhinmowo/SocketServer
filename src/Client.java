@@ -12,7 +12,7 @@ public class Client {
      */
     public static void main(String[] args) {
         // Use a try-with-resources statement to ensure the Socket and PrintWriter are closed automatically.
-        try (var socket = new Socket("localhost", 8080);
+        try (var socket = new Socket("localhost", 8090);
              // Create a PrintWriter to send text to the server.
              // The 'true' argument enables auto-flushing, which sends the data immediately apparently.
              var out = new PrintWriter(socket.getOutputStream(), true);
